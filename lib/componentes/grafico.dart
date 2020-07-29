@@ -9,7 +9,9 @@ class Grafico extends StatelessWidget {
   final List<Transacao> _transacoes_recentes;
 
   List<Map<String, Object>> get transacoesOrganizadas {
-    return List.generate(7, (index) {
+    double total = 0;
+
+    var lista = List.generate(7, (index) {
       final diaSemana = DateTime.now().subtract(Duration(days: index));
 
       double soma_total = 0;
@@ -20,11 +22,16 @@ class Grafico extends StatelessWidget {
 
         if (mesmo_dia && mesmo_mes && mesmo_ano) {
           soma_total += _transacoes_recentes[i].valor;
+          total += _transacoes_recentes[i].valor;
         }
       }
 
       return {'dia': DateFormat.E().format(diaSemana)[0], 'valor': soma_total};
     });
+    lista.forEach((element) {
+      element['porcentagem'] = (element['valor'] as double) / total;
+    });
+    return lista;
   }
 
   Grafico(this._transacoes_recentes);
@@ -36,7 +43,10 @@ class Grafico extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: transacoesOrganizadas.map((e) {
-          return BarraGrafico(e, porcentagem);
+          return Flexible(
+            child: BarraGrafico(e),
+            fit: FlexFit.tight
+          );
         }).toList(),
       ),
     );

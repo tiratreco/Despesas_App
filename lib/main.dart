@@ -14,7 +14,7 @@ class AppDespesas extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
           accentColor: Colors.yellow,
-          fontFamily: 'Montserrat',
+          fontFamily: 'IconsolataExpanded',
           appBarTheme: AppBarTheme(
               textTheme: ThemeData.light().textTheme.copyWith(
                   headline6: TextStyle(
@@ -48,11 +48,6 @@ class _HomeState extends State<Home> {
         titulo: 'Conta 3',
         valor: 200,
         data: DateTime.now().subtract(Duration(days: 10))),
-    Transacao(
-        id: '2',
-        titulo: 'Conta 4',
-        valor: 9999,
-        data: DateTime.now().subtract(Duration(days: 1))),
   ];
 
   List<Transacao> get _transacoesRecentes {

@@ -63,7 +63,7 @@ class ListaTransacoes extends StatelessWidget {
                         ),
                         Container(
                             child: Text(DateFormat('d MMM y').format(t.data),
-                                style: TextStyle(color: Colors.grey)))
+                                style: TextStyle(color: Colors.black)))
                       ])
                 ],
               ));
