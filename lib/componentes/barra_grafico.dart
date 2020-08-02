@@ -12,8 +12,11 @@ class BarraGrafico extends StatelessWidget {
       margin: EdgeInsets.all(5),
       child: Column(
         children: <Widget>[
-          FittedBox(
-            child: Text(dado_dia['valor'].toString()),
+          Container(
+            height: 20,
+            child: FittedBox(
+              child: Text(dado_dia['valor'].toString()),
+            ),
           ),Container(
             height: 60,
             width: 10,

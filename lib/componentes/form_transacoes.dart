@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FormularioTransacao extends StatefulWidget {
-  final void Function(String, double) _adicionarTransacao;
-
+  final void Function(String, double, DateTime) _adicionarTransacao;
 
   FormularioTransacao(this._adicionarTransacao);
 
@@ -14,16 +14,27 @@ class _FormularioTransacaoState extends State<FormularioTransacao> {
   final controleTitulo = TextEditingController();
 
   final controleValor = TextEditingController();
-
+  DateTime _data_selecionada;
   void _enviarFormulario() {
     final titulo = controleTitulo.text;
     final valor = double.tryParse(controleValor.text) ?? 0.0;
-    
-    if (titulo.isEmpty || valor<0.0)
-      return;
+    if (titulo.isEmpty || valor < 0.0) return;
 
-    widget._adicionarTransacao(titulo, valor);
+    widget._adicionarTransacao(titulo, valor,
+        (_data_selecionada == null) ? DateTime.now() : _data_selecionada);
+  }
 
+  _mostrarDatas() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((_data_pega) {
+      setState(() {
+        _data_selecionada = _data_pega;
+      });
+    });
   }
 
   Widget build(BuildContext contexto) {
@@ -35,26 +46,46 @@ class _FormularioTransacaoState extends State<FormularioTransacao> {
               children: <Widget>[
                 TextField(
                   controller: controleTitulo,
-                  onSubmitted: (valor) => _enviarFormulario(),
                   decoration: InputDecoration(
                     labelText: 'Título',
                   ),
                 ),
                 TextField(
                   controller: controleValor,
-                  keyboardType: TextInputType.numberWithOptions(decimal:true),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     labelText: 'Valor',
                   ),
                   onSubmitted: (valor) => _enviarFormulario(),
                 ),
+                Container(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text('Data selecionada: '),
+                    FlatButton(
+                      child: Text(
+                        (_data_selecionada == null ||
+                                _data_selecionada.day == DateTime.now().day)
+                            ? 'Hoje'
+                            : DateFormat('d/M/y').format(_data_selecionada),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                      onPressed: _mostrarDatas,
+                    )
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     FlatButton(
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           'Salvar',
-                          style: TextStyle(color: Colors.purple),
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         onPressed: _enviarFormulario)
                   ],

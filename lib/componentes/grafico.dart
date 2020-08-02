@@ -27,9 +27,11 @@ class Grafico extends StatelessWidget {
       }
 
       return {'dia': DateFormat.E().format(diaSemana)[0], 'valor': soma_total};
-    });
+    }).reversed.toList();
     lista.forEach((element) {
-      element['porcentagem'] = (element['valor'] as double) / total;
+      (total == 0)?
+        element['porcentagem'] = 0.0
+        : element['porcentagem'] = (element['valor'] as double) / total;
     });
     return lista;
   }

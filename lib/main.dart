@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:despesas/componentes/form_transacoes.dart';
 import 'package:despesas/componentes/grafico.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +20,14 @@ class AppDespesas extends StatelessWidget {
           appBarTheme: AppBarTheme(
               textTheme: ThemeData.light().textTheme.copyWith(
                   headline6: TextStyle(
-                      fontFamily: 'DancingScript',
-                      fontSize: 50,
+                      fontFamily: 'Montserrat',
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red))),
+                      color: Colors.red),
+                  button: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ))),
         ));
   }
 }
@@ -32,27 +38,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Transacao> _transacoes = [
-    Transacao(
-        id: '1',
-        titulo: 'Conta 1',
-        valor: 50.50,
-        data: DateTime.now().subtract(Duration(days: 3))),
-    Transacao(
-        id: '2',
-        titulo: 'Conta 2',
-        valor: 100,
-        data: DateTime.now().subtract(Duration(days: 5))),
-    Transacao(
-        id: '2',
-        titulo: 'Conta 3',
-        valor: 200,
-        data: DateTime.now().subtract(Duration(days: 10))),
-  ];
+  List<Transacao> _transacoes = [];
 
   List<Transacao> get _transacoesRecentes {
     return _transacoes.where((elemento) {
-      return elemento.data.isAfter(DateTime.now().subtract(Duration(days: 7)));
+      return (_transacoes.length == 0)
+          ? List
+          : elemento.data.isAfter(DateTime.now().subtract(Duration(days: 7)));
     }).toList();
   }
 
@@ -64,12 +56,18 @@ class _HomeState extends State<Home> {
         });
   }
 
-  void _adicionarTransacao(String titulo, double valor) {
+  void _deletarTransacao(String id) {
+    setState(() {
+      _transacoes.removeWhere((element) => id == element.id);
+    });
+  }
+
+  void _adicionarTransacao(String titulo, double valor, DateTime data) {
     Transacao novaTransacao = new Transacao(
-        id: _transacoes.length.toString(),
+        id: Random().nextDouble().toString(),
         titulo: titulo,
         valor: valor,
-        data: DateTime.now());
+        data: data);
 
     setState(() {
       _transacoes.add(novaTransacao);
@@ -96,7 +94,7 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Grafico(_transacoesRecentes),
             Column(
-              children: <Widget>[ListaTransacoes(_transacoes)],
+              children: <Widget>[ListaTransacoes(_transacoes, _deletarTransacao)],
             )
           ],
         ),
